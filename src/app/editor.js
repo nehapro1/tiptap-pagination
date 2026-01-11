@@ -2,49 +2,63 @@
 
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import { useEffect, useRef, useState } from "react";
+import { Table, TableRow, TableCell, TableHeader } from "@tiptap/extension-table";
+import { useRef, useState, useEffect } from "react";
 
-const PAGE_HEIGHT = 1056;
+const CONTENT_HEIGHT = 864; 
 
 export default function Editor() {
-  const contentRef = useRef(null);
+  const editorRef = useRef(null);
   const [pageCount, setPageCount] = useState(1);
 
   const editor = useEditor({
-    extensions: [StarterKit],
+    extensions: [
+      StarterKit,
+      Table.configure({ resizable: true }),
+      TableRow,
+      TableHeader,
+      TableCell,
+    ],
     content: "<p>Start typing here...</p>",
     immediatelyRender: false,
-    onUpdate() {
-      calculatePages();
-    },
+    onUpdate: () => requestAnimationFrame(calculatePages),
   });
 
   const calculatePages = () => {
-    if (!contentRef.current) return;
-
-    const contentHeight = contentRef.current.scrollHeight;
-    const pages = Math.max(1, Math.ceil(contentHeight / PAGE_HEIGHT));
-    setPageCount(pages);
+    if (!editorRef.current) return;
+    const height = editorRef.current.scrollHeight;
+    setPageCount(Math.max(1, Math.ceil(height / CONTENT_HEIGHT)));
   };
 
   useEffect(() => {
     calculatePages();
   }, []);
 
+  const handlePrint = () => window.print();
+
   if (!editor) return null;
 
   return (
-    <div className="flex flex-col gap-10">
+    <div className="editor-wrapper">
+      <div className="toolbar">
+        <button onClick={handlePrint}>Print / Export PDF</button>
+      </div>
+
       {Array.from({ length: pageCount }).map((_, index) => (
-        <div
-          key={index}
-          className="bg-white w-[816px] min-h-[1056px] p-[96px] shadow-lg"
-        >
+        <div key={index} className="page">
+          <div className="page-header">
+            <h4>Document Title</h4>
+          </div>
+
           {index === 0 && (
-            <div ref={contentRef}>
+            <div className="page-content" ref={editorRef}>
               <EditorContent editor={editor} />
             </div>
           )}
+
+          <div className="page-footer">
+            Page {index + 1} of {pageCount}
+          </div>
         </div>
       ))}
     </div>

@@ -1,26 +1,116 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background: #e5e7eb;
   font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+
+.editor-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px; 
+  padding: 40px 0;
+}
+
+
+.page {
+  width: 816px;           
+  min-height: 1056px;     
+  background: white;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; 
+  overflow: hidden;
+}
+
+
+
+.page-header {
+  height: 96px;           
+  padding: 24px 40px;
+  border-bottom: 1px solid #e5e7eb;
+  font-size: 14px;
+  color: #374151;
+}
+
+
+.page-content {
+  flex: 1;
+  padding: 24px 40px;
+  overflow-y: auto;      
+  min-height: 864px;
+  max-height: 864px;
+}
+
+
+.page-footer {
+  height: 72px;
+  padding: 16px 40px;
+  border-top: 1px solid #e5e7eb;
+  font-size: 14px;
+  color: #6b7280;
+  text-align: right;
+}
+
+
+
+.ProseMirror {
+  outline: none;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.ProseMirror p {
+  margin-bottom: 1em;
+}
+
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1em;
+}
+
+th,
+td {
+  border: 1px solid #d1d5db;
+  padding: 8px;
+  vertical-align: top;
+}
+
+tr {
+  page-break-inside: avoid;
+}
+
+
+@media print {
+  body {
+    background: white;
+  }
+
+  @page {
+    size: letter;
+    margin: 1in;
+  }
+
+  .editor-wrapper {
+    gap: 0;
+    padding: 0;
+  }
+
+  .page {
+    box-shadow: none;
+    margin: 0;
+    page-break-after: always;
+    overflow: visible;
+  }
+
+  .page-content {
+    overflow: visible;
+  }
 }
