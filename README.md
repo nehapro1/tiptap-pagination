@@ -68,7 +68,7 @@ How to Run
 
 Clone the repository:
 
-git clone <repository_url>
+git clone https://github.com/nehapro1/tiptap-pagination
 
 
 Install dependencies:
